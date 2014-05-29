@@ -4,7 +4,7 @@
  
 ###MimicJointPlugin
 
-A simple plugin for Gazebo in order to add to Gazebo the mimic joint functionality that exists in URDF (ROS). Inspired by code of Goncalo Cabrita.
+A simple (Model) plugin for Gazebo in order to add to Gazebo the mimic joint functionality that exists in URDF (ROS). Inspired by code of Goncalo Cabrita.
 
   - *XML Parameters*
 
