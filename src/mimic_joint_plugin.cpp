@@ -54,7 +54,7 @@ void MimicJointPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf )
   joint_name_ = _sdf->GetElement("joint")->Get<std::string>();
 
   // Check for mimicJoint element
-  if (_sdf->HasElement("mimicJoint"))
+  if (!_sdf->HasElement("mimicJoint"))
   {
     ROS_ERROR("No mimicJoint element present. MimicJointPlugin could not be loaded.");
     return;
