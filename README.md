@@ -18,11 +18,11 @@ A simple (Model) plugin for Gazebo in order to add to Gazebo the mimic joint fun
 
     - multiplier
 
-      A **double** specifying the multiplier parameter of the mimic joint.
+      A **double** specifying the multiplier parameter of the mimic joint. Defaults to 1.0.
 
     - offset
 
-      A **double** specifying the offset parameter of the mimic joint.
+      A **double** specifying the offset parameter of the mimic joint. Defaults to 0.0.
 
 
 ###Hoping to add more plugins....
