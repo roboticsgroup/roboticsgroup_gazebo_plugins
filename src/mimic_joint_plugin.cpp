@@ -45,7 +45,7 @@ void MimicJointPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf )
   this->world_ = this->model_->GetWorld();
 
   // Check for joint element
-  if (!_sdf->HasElement("joint"))
+  if(!_sdf->HasElement("joint"))
   {
     ROS_ERROR("No joint element present. MimicJointPlugin could not be loaded.");
     return;
@@ -54,7 +54,7 @@ void MimicJointPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf )
   joint_name_ = _sdf->GetElement("joint")->Get<std::string>();
 
   // Check for mimicJoint element
-  if (!_sdf->HasElement("mimicJoint"))
+  if(!_sdf->HasElement("mimicJoint"))
   {
     ROS_ERROR("No mimicJoint element present. MimicJointPlugin could not be loaded.");
     return;
@@ -64,7 +64,7 @@ void MimicJointPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf )
 
   // Check for multiplier element
   multiplier_ = 1.0;
-  if (_sdf->HasElement("multiplier"))
+  if(_sdf->HasElement("multiplier"))
     multiplier_ = _sdf->GetElement("multiplier")->Get<double>();
 
   // Check for offset element
@@ -72,14 +72,24 @@ void MimicJointPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf )
   if (_sdf->HasElement("offset"))
     offset_ = _sdf->GetElement("offset")->Get<double>();
 
+  // Get pointers to joints
+  joint_ = model_->GetJoint(joint_name_);
+  if(!joint_)
+  {
+    ROS_ERROR("No joint named %s. MimicJointPlugin could not be loaded.", joint_name_.c_str());
+    return;
+  }
+  mimic_joint_ = model_->GetJoint(mimic_joint_name_);
+  if(!mimic_joint_)
+  {
+    ROS_ERROR("No (mimic) joint named %s. MimicJointPlugin could not be loaded.", mimic_joint_name_.c_str());
+    return;
+  }
+
   // Listen to the update event. This event is broadcast every
   // simulation iteration.
   this->updateConnection = event::Events::ConnectWorldUpdateBegin(
       boost::bind(&MimicJointPlugin::UpdateChild, this));
-
-  // Get pointers to joints
-  joint_ = model_->GetJoint(joint_name_);
-  mimic_joint_ = model_->GetJoint(mimic_joint_name_);
 }
 
 void MimicJointPlugin::UpdateChild()
