@@ -20,8 +20,8 @@ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **/
 
-#ifndef GAZEBO_PLUGINS_MIMIC_JOINT_PLUGIN
-#define GAZEBO_PLUGINS_MIMIC_JOINT_PLUGIN
+#ifndef ROBOTICSGROUP_GAZEBO_PLUGINS_DISABLE_LINK_PLUGIN
+#define ROBOTICSGROUP_GAZEBO_PLUGINS_DISABLE_LINK_PLUGIN
 
 // ROS includes
 #include <ros/ros.h>
@@ -40,33 +40,29 @@ using std::string;
 
 namespace gazebo
 {
-  class MimicJointPlugin : public ModelPlugin
+  class DisableLinkPlugin : public ModelPlugin
   {
     public:
-      MimicJointPlugin();
-      ~MimicJointPlugin();
+      DisableLinkPlugin();
+      ~DisableLinkPlugin();
 
       void Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf);
       void UpdateChild();
 
     private:
       // Parameters
-      string joint_name_, mimic_joint_name_;
-      double multiplier_, offset_;
+      string link_name_;
 
       bool kill_sim;
 
       // Pointers to the joints
-      physics::JointPtr joint_, mimic_joint_;
+      physics::LinkPtr link_;
 
       // Pointer to the model
       physics::ModelPtr model_;
 
       // Pointer to the world
       physics::WorldPtr world_;
-
-      // Pointer to the update event connection
-      event::ConnectionPtr updateConnection;
 
   };
 }

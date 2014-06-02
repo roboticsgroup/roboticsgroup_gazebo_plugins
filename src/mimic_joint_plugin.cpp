@@ -20,7 +20,7 @@ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **/
 
-#include <gazebo_plugins/mimic_joint_plugin.h>
+#include <roboticsgroup_gazebo_plugins/mimic_joint_plugin.h>
 
 using namespace gazebo;
 
