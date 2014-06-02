@@ -52,7 +52,7 @@ namespace gazebo
     private:
       // Parameters
       string joint_name_, mimic_joint_name_;
-      double multiplier_, offset_;
+      double multiplier_, offset_, sensitiveness_;
 
       bool kill_sim;
 

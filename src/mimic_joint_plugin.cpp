@@ -72,6 +72,11 @@ void MimicJointPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf )
   if (_sdf->HasElement("offset"))
     offset_ = _sdf->GetElement("offset")->Get<double>();
 
+  // Check for sensitiveness element
+  sensitiveness_ = 0.0;
+  if (_sdf->HasElement("sensitiveness"))
+    sensitiveness_ = _sdf->GetElement("sensitiveness")->Get<double>();
+
   // Get pointers to joints
   joint_ = model_->GetJoint(joint_name_);
   if(!joint_)
@@ -95,7 +100,8 @@ void MimicJointPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf )
 void MimicJointPlugin::UpdateChild()
 {
   // Set mimic joint's angle based on joint's angle
-  mimic_joint_->SetAngle(0, math::Angle(joint_->GetAngle(0).Radian()*multiplier_+offset_));
+  if(abs((joint_->GetAngle(0).Radian()*multiplier_+offset_)-mimic_joint_->GetAngle(0).Radian())>=sensitiveness_)
+    mimic_joint_->SetAngle(0, math::Angle(joint_->GetAngle(0).Radian()*multiplier_+offset_));
 }
 
 GZ_REGISTER_MODEL_PLUGIN(MimicJointPlugin);
