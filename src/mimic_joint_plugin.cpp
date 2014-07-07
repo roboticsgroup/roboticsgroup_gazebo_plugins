@@ -77,6 +77,11 @@ void MimicJointPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf )
   if (_sdf->HasElement("sensitiveness"))
     sensitiveness_ = _sdf->GetElement("sensitiveness")->Get<double>();
 
+  // Check for max effort
+  max_effort_ = 1.0;
+  if (_sdf->HasElement("maxEffort"))
+    max_effort_ = _sdf->GetElement("maxEffort")->Get<double>();
+
   // Get pointers to joints
   joint_ = model_->GetJoint(joint_name_);
   if(!joint_)
@@ -90,6 +95,9 @@ void MimicJointPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf )
     ROS_ERROR("No (mimic) joint named %s. MimicJointPlugin could not be loaded.", mimic_joint_name_.c_str());
     return;
   }
+  
+  // Set max effort
+  mimic_joint_->SetMaxForce(0,max_effort_);
 
   // Listen to the update event. This event is broadcast every
   // simulation iteration.

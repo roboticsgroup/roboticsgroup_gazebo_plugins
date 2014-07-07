@@ -23,6 +23,11 @@ A simple (Model) plugin for Gazebo in order to add to Gazebo the mimic joint fun
     - offset
 
       A **double** specifying the offset parameter of the mimic joint. Defaults to 0.0.
+
+    - maxEffort
+
+      A **double** specifying the max effort the mimic joint can generate. Defaults to 1.0.
+
     - sensitiveness
 
       A **double** specifying the sensitiveness of the mimic joint. Defaults to 0.0. It basically is the threshold of the difference between the 2 angles (joint's and mimic's) before applying the "mimicness".
