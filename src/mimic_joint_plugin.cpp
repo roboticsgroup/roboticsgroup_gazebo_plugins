@@ -41,8 +41,30 @@ MimicJointPlugin::~MimicJointPlugin()
 
 void MimicJointPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf )
 {
-  this->model_ = _parent;
-  this->world_ = this->model_->GetWorld();
+  ros::NodeHandle model_nh;
+  model_ = _parent;
+  world_ = model_->GetWorld();
+
+  // Error message if the model couldn't be found
+  if (!model_)
+  {
+    ROS_ERROR("Parent model is NULL! GazeboNaoqiControlPlugin could not be loaded.");
+    return;
+  }
+
+  // Check that ROS has been initialized
+  if(!ros::isInitialized())
+  {
+    ROS_ERROR("A ROS node for Gazebo has not been initialized, unable to load plugin.");
+    return;
+  }
+
+  // Check for robot namespace
+  robot_namespace_ = "/";
+  if(_sdf->HasElement("robotNamespace"))
+  {
+    robot_namespace_ = _sdf->GetElement("robotNamespace")->Get<std::string>();
+  }
 
   // Check for joint element
   if(!_sdf->HasElement("joint"))
@@ -62,6 +84,22 @@ void MimicJointPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf )
   
   mimic_joint_name_ = _sdf->GetElement("mimicJoint")->Get<std::string>();
 
+  has_pid_ = false;
+  // Check if PID controller wanted
+  if(_sdf->HasElement("hasPID"))
+  {
+    has_pid_ = true;
+
+    const ros::NodeHandle nh(model_nh, std::string(robot_namespace_+"/gazebo_ros_control/pid_gains/")+mimic_joint_name_);
+    double p, i,d ;
+    // TO-DO: include i_clamp e.t.c.
+    nh.param("p", p, 0.0);
+    nh.param("i", i, 0.0);
+    nh.param("d", d, 0.0);
+
+    pid_ = control_toolbox::Pid(p,i,d);
+  }
+
   // Check for multiplier element
   multiplier_ = 1.0;
   if(_sdf->HasElement("multiplier"))
@@ -80,7 +118,9 @@ void MimicJointPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf )
   // Check for max effort
   max_effort_ = 1.0;
   if (_sdf->HasElement("maxEffort"))
+  {
     max_effort_ = _sdf->GetElement("maxEffort")->Get<double>();
+  }
 
   // Get pointers to joints
   joint_ = model_->GetJoint(joint_name_);
@@ -97,7 +137,8 @@ void MimicJointPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf )
   }
   
   // Set max effort
-  mimic_joint_->SetMaxForce(0,max_effort_);
+  if(!has_pid_)
+    mimic_joint_->SetMaxForce(0,max_effort_);
 
   // Listen to the update event. This event is broadcast every
   // simulation iteration.
@@ -107,9 +148,24 @@ void MimicJointPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf )
 
 void MimicJointPlugin::UpdateChild()
 {
+  static ros::Duration period(world_->GetPhysicsEngine()->GetMaxStepSize());
+
   // Set mimic joint's angle based on joint's angle
-  if(abs((joint_->GetAngle(0).Radian()*multiplier_+offset_)-mimic_joint_->GetAngle(0).Radian())>=sensitiveness_)
-    mimic_joint_->SetAngle(0, math::Angle(joint_->GetAngle(0).Radian()*multiplier_+offset_));
+  double angle = joint_->GetAngle(0).Radian()*multiplier_+offset_;
+  
+  if(abs(angle-mimic_joint_->GetAngle(0).Radian())>=sensitiveness_)
+  {
+    if(has_pid_)
+    {
+      double a = mimic_joint_->GetAngle(0).Radian();
+      if(a!=a)
+        a = angle;
+      double error = angle-a;
+      double effort = gazebo::math::clamp(pid_.computeCommand(error, period), -max_effort_, max_effort_);
+    }
+    else
+      mimic_joint_->SetAngle(0, math::Angle(angle));
+  }
 }
 
 GZ_REGISTER_MODEL_PLUGIN(MimicJointPlugin);

@@ -37,10 +37,12 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISE
 
   <build_depend>gazebo_ros</build_depend>
   <build_depend>roscpp</build_depend>
+  <build_depend>control_toolbox</build_depend>
 
 
   <run_depend>gazebo_ros</run_depend>
   <run_depend>roscpp</run_depend>
+  <run_depend>control_toolbox</run_depend>
 
 
   <export>

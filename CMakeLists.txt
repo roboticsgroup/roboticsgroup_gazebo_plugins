@@ -4,7 +4,8 @@ project(roboticsgroup_gazebo_plugins)
 # Load catkin and all dependencies required for this package
 find_package(catkin REQUIRED COMPONENTS 
   roscpp 
-  gazebo_ros 
+  gazebo_ros
+  control_toolbox
 )
 
 # Depend on system install of Gazebo
@@ -23,5 +24,6 @@ target_link_libraries(roboticsgroup_gazebo_disable_link_plugin ${catkin_LIBRARIE
 catkin_package(
   DEPENDS 
     roscpp 
-    gazebo_ros 
+    gazebo_ros
+    control_toolbox
 )

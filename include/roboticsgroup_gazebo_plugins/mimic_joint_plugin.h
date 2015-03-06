@@ -26,6 +26,9 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISE
 // ROS includes
 #include <ros/ros.h>
 
+// ros_control
+#include <control_toolbox/pid.h>
+
 // Boost includes
 #include <boost/bind.hpp>
 
@@ -34,9 +37,6 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISE
 #include <gazebo/gazebo.hh>
 #include <gazebo/physics/physics.hh>
 #include <gazebo/common/common.hh>
-
-
-using std::string;
 
 namespace gazebo
 {
@@ -51,10 +51,14 @@ namespace gazebo
 
     private:
       // Parameters
-      string joint_name_, mimic_joint_name_;
+      std::string joint_name_, mimic_joint_name_, robot_namespace_;
       double multiplier_, offset_, sensitiveness_, max_effort_;
+      bool has_pid_;
 
       bool kill_sim;
+
+      // PID controller if needed
+      control_toolbox::Pid pid_;
 
       // Pointers to the joints
       physics::JointPtr joint_, mimic_joint_;
