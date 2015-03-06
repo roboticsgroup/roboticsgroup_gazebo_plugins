@@ -33,9 +33,11 @@ A simple (Model) plugin for Gazebo in order to add to Gazebo the mimic joint fun
       A **double** specifying the sensitiveness of the mimic joint. Defaults to 0.0. It basically is the threshold of the difference between the 2 angles (joint's and mimic's) before applying the "mimicness".
 
     - robotNamespace
+
       A **string** specifying the namespace the robot is under. Defaults to '/'.
 
     - hasPID
+    
       Determines whether the joint has PID in order to be controlled via PID position/effort controller. Takes no value: *<hasPID/>* means that the mimic joint is controlled via PID. Ommit it so that the mimic joint is controlled via setAngle.
 
 ###DisableLinkPlugin
