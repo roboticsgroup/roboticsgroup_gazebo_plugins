@@ -22,7 +22,8 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISE
 
 #include <roboticsgroup_gazebo_plugins/mimic_joint_plugin.h>
 
-using namespace gazebo;
+namespace gazebo
+{
 
 MimicJointPlugin::MimicJointPlugin()
 {
@@ -169,3 +170,5 @@ void MimicJointPlugin::UpdateChild()
 }
 
 GZ_REGISTER_MODEL_PLUGIN(MimicJointPlugin);
+
+}

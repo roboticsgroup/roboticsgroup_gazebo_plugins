@@ -35,9 +35,6 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISE
 #include <gazebo/physics/physics.hh>
 #include <gazebo/common/common.hh>
 
-
-using std::string;
-
 namespace gazebo
 {
   class DisableLinkPlugin : public ModelPlugin
@@ -51,7 +48,7 @@ namespace gazebo
 
     private:
       // Parameters
-      string link_name_;
+      std::string link_name_;
 
       bool kill_sim;
 

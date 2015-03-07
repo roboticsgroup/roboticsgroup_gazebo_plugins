@@ -22,7 +22,8 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISE
 
 #include <roboticsgroup_gazebo_plugins/disable_link_plugin.h>
 
-using namespace gazebo;
+namespace gazebo
+{
 
 DisableLinkPlugin::DisableLinkPlugin()
 {
@@ -38,8 +39,8 @@ DisableLinkPlugin::~DisableLinkPlugin()
 
 void DisableLinkPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf )
 {
-  this->model_ = _parent;
-  this->world_ = this->model_->GetWorld();
+  model_ = _parent;
+  world_ = model_->GetWorld();
 
   // Check for link element
   if (!_sdf->HasElement("link"))
@@ -59,3 +60,5 @@ void DisableLinkPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf )
 }
 
 GZ_REGISTER_MODEL_PLUGIN(DisableLinkPlugin);
+
+}
