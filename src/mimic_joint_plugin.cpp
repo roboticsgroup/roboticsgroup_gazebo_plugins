@@ -163,6 +163,7 @@ void MimicJointPlugin::UpdateChild()
         a = angle;
       double error = angle-a;
       double effort = gazebo::math::clamp(pid_.computeCommand(error, period), -max_effort_, max_effort_);
+      mimic_joint_->SetForce(0, effort);
     }
     else
       mimic_joint_->SetAngle(0, math::Angle(angle));
