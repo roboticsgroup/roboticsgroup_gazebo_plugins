@@ -8,6 +8,8 @@ find_package(catkin REQUIRED COMPONENTS
   control_toolbox
 )
 
+add_definitions(-std=gnu++0x)
+
 # Depend on system install of Gazebo
 find_package(gazebo REQUIRED)
 find_package(Boost REQUIRED)
