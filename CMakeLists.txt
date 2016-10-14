@@ -10,6 +10,10 @@ find_package(catkin REQUIRED COMPONENTS
 
 # Depend on system install of Gazebo
 find_package(gazebo REQUIRED)
+if(${GAZEBO_MAJOR_VERSION} GREATER "5")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
+endif()
+
 find_package(Boost REQUIRED)
 
 catkin_package(
