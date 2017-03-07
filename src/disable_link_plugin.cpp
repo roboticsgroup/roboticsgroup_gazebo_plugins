@@ -12,7 +12,7 @@ Redistribution and use in source and binary forms, with or without modification,
 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived
     from this software without specific prior written permission.
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, 
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING,
 BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
 SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
 DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
@@ -51,10 +51,13 @@ namespace gazebo {
 
         // Get pointers to joints
         link_ = model_->GetLink(link_name_);
-        if (link_)
+        if (link_) {
             link_->SetEnabled(false);
+            // Output some confirmation
+            ROS_INFO_STREAM("DisableLinkPlugin loaded! Link: \"" << link_name_);
+        }
         else
-            ROS_WARN("Link %s not found!", link_name_.c_str());
+            ROS_ERROR_STREAM("Link" << link_name_ << " not found! DisableLinkPlugin could not be loaded.");
     }
 
     GZ_REGISTER_MODEL_PLUGIN(DisableLinkPlugin);

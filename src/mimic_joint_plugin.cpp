@@ -118,12 +118,12 @@ namespace gazebo {
         // Get pointers to joints
         joint_ = model_->GetJoint(joint_name_);
         if (!joint_) {
-            ROS_ERROR("No joint named %s. MimicJointPlugin could not be loaded.", joint_name_.c_str());
+            ROS_ERROR_STREAM("No joint named \"" << joint_name_ << "\". MimicJointPlugin could not be loaded.");
             return;
         }
         mimic_joint_ = model_->GetJoint(mimic_joint_name_);
         if (!mimic_joint_) {
-            ROS_ERROR("No (mimic) joint named %s. MimicJointPlugin could not be loaded.", mimic_joint_name_.c_str());
+            ROS_ERROR_STREAM("No (mimic) joint named \"" << mimic_joint_name_ << "\". MimicJointPlugin could not be loaded.");
             return;
         }
 
