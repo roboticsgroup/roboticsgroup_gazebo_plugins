@@ -1,8 +1,11 @@
-#roboticsgroup_gazebo_plugins
+roboticsgroup_gazebo_plugins
+================
 
-##Collection of small gazebo plugins
+Collection of small gazebo plugins
+----------------------------------
 
-###MimicJointPlugin
+MimicJointPlugin
+----------------
 
 A simple (Model) plugin for Gazebo in order to add to Gazebo the mimic joint functionality that exists in URDF (ROS). Inspired by code of Goncalo Cabrita.
 
@@ -40,7 +43,8 @@ A simple (Model) plugin for Gazebo in order to add to Gazebo the mimic joint fun
 
       Determines whether the joint has PID in order to be controlled via PID position/effort controller. Takes no value: *\<hasPID/\>* means that the mimic joint is controlled via PID. Ommit it so that the mimic joint is controlled via setAngle.
 
-###DisableLinkPlugin
+DisableLinkPlugin
+-----------------
 
 A simple (Model) plugin for Gazebo that allows you to disable a link in Gazebo's physics engine.
 
