@@ -82,10 +82,12 @@ namespace gazebo {
         has_pid_ = false;
         // Check if PID controller wanted
         if (_sdf->HasElement("hasPID")) {
-            has_pid_ = true;
+            has_pid_ = _sdf->GetElement("hasPID")->Get<bool>();
 
-            const ros::NodeHandle nh(model_nh, std::string(robot_namespace_ + "/gazebo_ros_control/pid_gains/") + mimic_joint_name_);
-            pid_.init(nh);
+            if (has_pid_) {
+                const ros::NodeHandle nh(model_nh, std::string(robot_namespace_ + "/gazebo_ros_control/pid_gains/") + mimic_joint_name_);
+                pid_.init(nh);
+            }
         }
 
         // Check for multiplier element
