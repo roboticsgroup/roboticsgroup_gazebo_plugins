@@ -169,7 +169,9 @@ namespace gazebo {
                 mimic_joint_->SetForce(0, effort);
             }
             else {
-#if GAZEBO_MAJOR_VERSION > 2
+#if GAZEBO_MAJOR_VERSION >= 9
+                mimic_joint_->SetPosition(0, angle, true);
+#elif GAZEBO_MAJOR_VERSION > 2
                 mimic_joint_->SetPosition(0, angle);
 #else
                 mimic_joint_->SetAngle(0, math::Angle(angle));
