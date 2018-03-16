@@ -53,8 +53,6 @@ namespace gazebo {
         double multiplier_, offset_, sensitiveness_, max_effort_;
         bool has_pid_;
 
-        bool kill_sim;
-
         // PID controller if needed
         control_toolbox::Pid pid_;
 

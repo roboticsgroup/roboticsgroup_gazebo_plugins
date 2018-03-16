@@ -32,8 +32,6 @@ namespace gazebo {
 
     MimicJointPlugin::MimicJointPlugin()
     {
-        kill_sim = false;
-
         joint_.reset();
         mimic_joint_.reset();
     }
@@ -41,7 +39,6 @@ namespace gazebo {
     MimicJointPlugin::~MimicJointPlugin()
     {
         this->updateConnection.reset();
-        kill_sim = true;
     }
 
     void MimicJointPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf)
