@@ -22,6 +22,12 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISE
 
 #include <roboticsgroup_gazebo_plugins/mimic_joint_plugin.h>
 
+#if GAZEBO_MAJOR_VERSION >= 8
+using namespace ignition::math;
+#else
+using namespace gazebo::math;
+#endif
+
 namespace gazebo {
 
     MimicJointPlugin::MimicJointPlugin()
@@ -34,8 +40,7 @@ namespace gazebo {
 
     MimicJointPlugin::~MimicJointPlugin()
     {
-        event::Events::DisconnectWorldUpdateBegin(this->updateConnection);
-
+        this->updateConnection.reset();
         kill_sim = true;
     }
 
@@ -143,18 +148,27 @@ namespace gazebo {
 
     void MimicJointPlugin::UpdateChild()
     {
+#if GAZEBO_MAJOR_VERSION >= 8
+        static ros::Duration period(world_->Physics()->GetMaxStepSize());
+#else
         static ros::Duration period(world_->GetPhysicsEngine()->GetMaxStepSize());
+#endif
 
         // Set mimic joint's angle based on joint's angle
+#if GAZEBO_MAJOR_VERSION >= 8
+        double angle = joint_->Position(0) * multiplier_ + offset_;
+        double a = mimic_joint_->Position(0);
+#else
         double angle = joint_->GetAngle(0).Radian() * multiplier_ + offset_;
+        double a = mimic_joint_->GetAngle(0).Radian();
+#endif
 
-        if (abs(angle - mimic_joint_->GetAngle(0).Radian()) >= sensitiveness_) {
+        if (abs(angle - a) >= sensitiveness_) {
             if (has_pid_) {
-                double a = mimic_joint_->GetAngle(0).Radian();
                 if (a != a)
                     a = angle;
                 double error = angle - a;
-                double effort = gazebo::math::clamp(pid_.computeCommand(error, period), -max_effort_, max_effort_);
+                double effort = clamp(pid_.computeCommand(error, period), -max_effort_, max_effort_);
                 mimic_joint_->SetForce(0, effort);
             }
             else {
