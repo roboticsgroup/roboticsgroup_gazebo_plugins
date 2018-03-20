@@ -23,9 +23,9 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISE
 #include <roboticsgroup_gazebo_plugins/mimic_joint_plugin.h>
 
 #if GAZEBO_MAJOR_VERSION >= 8
-using namespace ignition::math;
+namespace math = ignition::math;
 #else
-using namespace gazebo::math;
+namespace math = gazebo::math;
 #endif
 
 namespace gazebo {
@@ -165,7 +165,7 @@ namespace gazebo {
                 if (a != a)
                     a = angle;
                 double error = angle - a;
-                double effort = clamp(pid_.computeCommand(error, period), -max_effort_, max_effort_);
+                double effort = math::clamp(pid_.computeCommand(error, period), -max_effort_, max_effort_);
                 mimic_joint_->SetForce(0, effort);
             }
             else {
