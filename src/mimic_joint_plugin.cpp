@@ -172,6 +172,10 @@ namespace gazebo {
 #if GAZEBO_MAJOR_VERSION >= 9
                 mimic_joint_->SetPosition(0, angle, true);
 #elif GAZEBO_MAJOR_VERSION > 2
+                ROS_WARN_ONCE("The mimic_joint plugin is using the Joint::SetPosition method without preserving the link velocity.");
+                ROS_WARN_ONCE("As a result, gravity will not be simulated correctly for your model.");
+                ROS_WARN_ONCE("Please set gazebo_pid parameters or upgrade to Gazebo 9.");
+                ROS_WARN_ONCE("For details, see https://github.com/ros-simulation/gazebo_ros_pkgs/issues/612");
                 mimic_joint_->SetPosition(0, angle);
 #else
                 mimic_joint_->SetAngle(0, math::Angle(angle));
