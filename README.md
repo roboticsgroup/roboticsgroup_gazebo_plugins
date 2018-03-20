@@ -54,7 +54,7 @@ A simple (Model) plugin for Gazebo that allows you to disable a link in Gazebo's
 
       A **string** specifying the name of the link to be disabled. It should be a valid sdf (not urdf) link.
 
-###Hoping to add more plugins....
+### Hoping to add more plugins....
 
 Usage
 ------
