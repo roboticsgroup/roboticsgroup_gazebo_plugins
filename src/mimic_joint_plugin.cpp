@@ -22,21 +22,23 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISE
 
 #include <roboticsgroup_gazebo_plugins/mimic_joint_plugin.h>
 
+#if GAZEBO_MAJOR_VERSION >= 8
+namespace math = ignition::math;
+#else
+namespace math = gazebo::math;
+#endif
+
 namespace gazebo {
 
     MimicJointPlugin::MimicJointPlugin()
     {
-        kill_sim = false;
-
         joint_.reset();
         mimic_joint_.reset();
     }
 
     MimicJointPlugin::~MimicJointPlugin()
     {
-        event::Events::DisconnectWorldUpdateBegin(this->updateConnection);
-
-        kill_sim = true;
+        this->updateConnection.reset();
     }
 
     void MimicJointPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf)
@@ -143,22 +145,37 @@ namespace gazebo {
 
     void MimicJointPlugin::UpdateChild()
     {
+#if GAZEBO_MAJOR_VERSION >= 8
+        static ros::Duration period(world_->Physics()->GetMaxStepSize());
+#else
         static ros::Duration period(world_->GetPhysicsEngine()->GetMaxStepSize());
+#endif
 
         // Set mimic joint's angle based on joint's angle
+#if GAZEBO_MAJOR_VERSION >= 8
+        double angle = joint_->Position(0) * multiplier_ + offset_;
+        double a = mimic_joint_->Position(0);
+#else
         double angle = joint_->GetAngle(0).Radian() * multiplier_ + offset_;
+        double a = mimic_joint_->GetAngle(0).Radian();
+#endif
 
-        if (abs(angle - mimic_joint_->GetAngle(0).Radian()) >= sensitiveness_) {
+        if (abs(angle - a) >= sensitiveness_) {
             if (has_pid_) {
-                double a = mimic_joint_->GetAngle(0).Radian();
                 if (a != a)
                     a = angle;
                 double error = angle - a;
-                double effort = gazebo::math::clamp(pid_.computeCommand(error, period), -max_effort_, max_effort_);
+                double effort = math::clamp(pid_.computeCommand(error, period), -max_effort_, max_effort_);
                 mimic_joint_->SetForce(0, effort);
             }
             else {
-#if GAZEBO_MAJOR_VERSION > 2
+#if GAZEBO_MAJOR_VERSION >= 9
+                mimic_joint_->SetPosition(0, angle, true);
+#elif GAZEBO_MAJOR_VERSION > 2
+                ROS_WARN_ONCE("The mimic_joint plugin is using the Joint::SetPosition method without preserving the link velocity.");
+                ROS_WARN_ONCE("As a result, gravity will not be simulated correctly for your model.");
+                ROS_WARN_ONCE("Please set gazebo_pid parameters or upgrade to Gazebo 9.");
+                ROS_WARN_ONCE("For details, see https://github.com/ros-simulation/gazebo_ros_pkgs/issues/612");
                 mimic_joint_->SetPosition(0, angle);
 #else
                 mimic_joint_->SetAngle(0, math::Angle(angle));
