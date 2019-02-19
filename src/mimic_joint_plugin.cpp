@@ -60,7 +60,7 @@ namespace gazebo {
         }
 
         // Check for robot namespace
-        robot_namespace_ = "/";
+        robot_namespace_ = "";
         if (_sdf->HasElement("robotNamespace")) {
             robot_namespace_ = _sdf->GetElement("robotNamespace")->Get<std::string>();
         }
@@ -105,12 +105,6 @@ namespace gazebo {
         if (_sdf->HasElement("sensitiveness"))
             sensitiveness_ = _sdf->GetElement("sensitiveness")->Get<double>();
 
-        // Check for max effort
-        max_effort_ = 1.0;
-        if (_sdf->HasElement("maxEffort")) {
-            max_effort_ = _sdf->GetElement("maxEffort")->Get<double>();
-        }
-
         // Get pointers to joints
         joint_ = model_->GetJoint(joint_name_);
         if (!joint_) {
@@ -121,6 +115,16 @@ namespace gazebo {
         if (!mimic_joint_) {
             ROS_ERROR_STREAM("No (mimic) joint named \"" << mimic_joint_name_ << "\". MimicJointPlugin could not be loaded.");
             return;
+        }
+
+        // Check for max effort
+#if GAZEBO_MAJOR_VERSION > 2
+        max_effort_ = mimic_joint_->GetEffortLimit(0);
+#else
+        max_effort_ = mimic_joint_->GetMaxForce(0);
+#endif
+        if (_sdf->HasElement("maxEffort")) {
+            max_effort_ = _sdf->GetElement("maxEffort")->Get<double>();
         }
 
         // Set max effort
@@ -160,7 +164,7 @@ namespace gazebo {
         double a = mimic_joint_->GetAngle(0).Radian();
 #endif
 
-        if (abs(angle - a) >= sensitiveness_) {
+        if (fabs(angle - a) >= sensitiveness_) {
             if (has_pid_) {
                 if (a != a)
                     a = angle;
