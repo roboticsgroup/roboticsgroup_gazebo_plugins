@@ -43,13 +43,12 @@ namespace gazebo {
 
     void MimicJointPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf)
     {
-        ros::NodeHandle model_nh;
         model_ = _parent;
         world_ = model_->GetWorld();
 
         // Error message if the model couldn't be found
         if (!model_) {
-            ROS_ERROR("Parent model is NULL! GazeboNaoqiControlPlugin could not be loaded.");
+            ROS_ERROR("Parent model is NULL! MimicJointPlugin could not be loaded.");
             return;
         }
 
@@ -64,6 +63,7 @@ namespace gazebo {
         if (_sdf->HasElement("robotNamespace")) {
             robot_namespace_ = _sdf->GetElement("robotNamespace")->Get<std::string>();
         }
+        ros::NodeHandle model_nh(robot_namespace_);
 
         // Check for joint element
         if (!_sdf->HasElement("joint")) {
@@ -81,12 +81,14 @@ namespace gazebo {
 
         mimic_joint_name_ = _sdf->GetElement("mimicJoint")->Get<std::string>();
 
-        has_pid_ = false;
         // Check if PID controller wanted
-        if (_sdf->HasElement("hasPID")) {
-            has_pid_ = true;
-
-            const ros::NodeHandle nh(model_nh, std::string(robot_namespace_ + "/gazebo_ros_control/pid_gains/") + mimic_joint_name_);
+        has_pid_ = _sdf->HasElement("hasPID");
+        if (has_pid_) {
+            std::string name = _sdf->GetElement("hasPID")->Get<std::string>();
+            if (name.empty()) {
+                name = "gazebo_ros_control/pid_gains/" + mimic_joint_name_;
+            }
+            const ros::NodeHandle nh(model_nh, name);
             pid_.init(nh);
         }
 
