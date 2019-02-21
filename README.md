@@ -41,7 +41,7 @@ A simple (Model) plugin for Gazebo in order to add to Gazebo the mimic joint fun
 
     - hasPID
 
-      Determines whether the joint has PID in order to be controlled via PID position/effort controller. Takes no value: *\<hasPID/\>* means that the mimic joint is controlled via PID. Omit it so that the mimic joint is controlled via setAngle.
+      Determines whether the joint has PID in order to be controlled via PID position/effort controller. *\<hasPID/\>* means that the mimic joint is controlled via PID. Omit it so that the mimic joint is controlled via setAngle. Optionally, specify a value to set the pid namespace.
 
 DisableLinkPlugin
 -----------------
