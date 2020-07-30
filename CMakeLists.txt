@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 2.8.6 FATAL_ERROR)
 project(roboticsgroup_gazebo_plugins)
 
+# Set CMP0054
+cmake_policy(SET CMP0054 NEW)
+
 # Load catkin and all dependencies required for this package
 find_package(catkin REQUIRED COMPONENTS
   roscpp
