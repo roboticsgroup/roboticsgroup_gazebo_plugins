@@ -132,7 +132,7 @@ namespace gazebo {
         // Set max effort
         if (!has_pid_) {
 #if GAZEBO_MAJOR_VERSION > 2
-            mimic_joint_->SetEffortLimit(0, max_effort_);
+            mimic_joint_->SetParam("fmax", 0, max_effort_);
 #else
             mimic_joint_->SetMaxForce(0, max_effort_);
 #endif
