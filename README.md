@@ -1,6 +1,8 @@
 roboticsgroup_gazebo_plugins
 ================
 
+This package has been **deprecated**. For the latest updates, visit [roboticsgroup_upatras_gazebo_plugins](https://github.com/roboticsgroup/roboticsgroup_upatras_gazebo_plugins).
+
 Collection of small gazebo plugins
 ----------------------------------
 
